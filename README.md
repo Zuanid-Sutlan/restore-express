@@ -1,31 +1,58 @@
-# express
+# Restore Express Server
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+A clean, layered Ktor server for a repair service and refurbished device shop.
 
-Here are some useful links to get you started:
- * [Ktor Documentation](https://ktor.io/docs/home.html)
- * [Ktor GitHub page](https://github.com/ktorio/ktor)
- * [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). [Request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up).
+## Tech Stack
+- **Ktor** (Core, Sessions, FreeMarker, ContentNegotiation)
+- **Exposed ORM** + **PostgreSQL**
+- **Flyway** (Migrations)
+- **Stripe Java SDK** (Payments)
+- **Kotlinx Serialization** (JSON)
+- **FreeMarker** (HTML Templates)
+- **dotenv-kotlin** (Configuration)
 
+## Project Structure
+- `config/`: Infrastructure setup (DB, Stripe, Auth)
+- `models/`: Database tables (Exposed) and Data Classes
+- `services/`: Business logic (Repair, Shop, Stripe)
+- `routes/`: Ktor route handlers grouped by feature
+- `templates/`: FreeMarker `.ftl` files (as requested in `src/main/kotlin/...`)
+- `resources/db/migration/`: Flyway SQL scripts
 
-## Features
-Here's a list of features included in this project:
+## Setup
 
-| Name | Description |
-|------|-------------|
+1. **Environment Variables**:
+   Copy `.env.example` to `.env` and fill in your Stripe keys and database credentials.
+   ```bash
+   cp .env.example .env
+   ```
 
-## Building & Running
-To build or run the project, use one of the following tasks:
+2. **Database**:
+   Run the local PostgreSQL instance using Docker:
+   ```bash
+   docker-compose up -d
+   ```
 
+3. **Run Migrations**:
+   Flyway migrations run automatically on application startup via `DatabaseFactory`.
 
-| Task | Description |
-|------|-------------|
-| `./gradlew test`    | Run the tests     |
-| `./gradlew build`   | Build the project |
-| `./gradlew run`     | Run the server    |
+4. **Run the Application**:
+   ```bash
+   ./gradlew run
+   ```
+   The server will be available at `http://localhost:8080`.
 
-If the server starts successfully, you'll see the following output:
-```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
-```
+## Key Routes
+- `/`: Homepage
+- `/repair/book`: Repair booking form
+- `/shop`: Product catalog
+- `/track`: Tracking page (lookup by reference)
+- `/admin/login`: Admin gateway
+- `/webhooks/stripe`: Stripe payment verification
+
+## Database Schema
+The schema is defined in `V1__init.sql` and mapped in `models/*.kt`. 
+It includes modules for:
+- **Repairs**: Tracking status, customer details, and payments.
+- **Shop**: Inventory management, orders, and items.
+- **Admins**: Secure access to the dashboard.
