@@ -3,13 +3,13 @@ package com.restoreexpress.services
 import com.restoreexpress.config.DatabaseFactory.dbQuery
 import com.restoreexpress.models.Admin
 import com.restoreexpress.models.Admins
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.mindrot.jbcrypt.BCrypt
 
 open class AdminService {
     open suspend fun authenticate(email: String, password: String): Admin? {
         val admin = dbQuery {
-            Admins.select { Admins.email eq email }
+            Admins.selectAll().where { Admins.email eq email }
                 .map {
                     Admin(
                         id = it[Admins.id].value,
