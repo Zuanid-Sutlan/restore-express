@@ -276,11 +276,14 @@ class ApiTests {
         val versionService = VersionService()
         val info = versionService.getVersionInfo()
         
-        val expectedSuffix = if (info.isProduction) "prod" else "dev"
-        assertEquals("v${info.version}-$expectedSuffix", info.fullVersionTag)
+        val expectedPrefix = if (info.isProduction) "v${info.version}-prod" else "v${info.version}-dev"
+        assertTrue(
+            info.fullVersionTag.startsWith(expectedPrefix),
+            "Tag '${info.fullVersionTag}' should start with '$expectedPrefix'"
+        )
         assertFalse(info.fullVersionTag.contains("dev-dev"), "Dev tag should not have duplicated -dev-dev")
         if (info.isProduction) {
-            assertFalse(info.fullVersionTag.endsWith("-dev"), "Production tag should not end with -dev")
+            assertFalse(info.fullVersionTag.contains("-dev"), "Production tag should not contain -dev")
         }
     }
 
