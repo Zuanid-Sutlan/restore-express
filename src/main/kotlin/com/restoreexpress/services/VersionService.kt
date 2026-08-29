@@ -16,7 +16,7 @@ open class VersionService(private val dotenv: Dotenv? = null) {
             }
         }
 
-        val baseVersion = properties.getProperty("app.version")
+        val rawVersion = properties.getProperty("app.version")
             ?: dotenv?.get("APP_VERSION")
             ?: System.getenv("APP_VERSION")
             ?: "1.0.0"
@@ -27,19 +27,27 @@ open class VersionService(private val dotenv: Dotenv? = null) {
             ?: "develop"
 
         val normalizedEnv = rawEnv.lowercase().trim()
-        val isProd = normalizedEnv == "production" || normalizedEnv == "prod" || normalizedEnv == "main"
+        val isProd = (normalizedEnv == "production") || (normalizedEnv == "prod") || (normalizedEnv == "main")
         val envName = if (isProd) "production" else "develop"
 
-        val commitHash = dotenv?.get("GIT_COMMIT_HASH")
+        // Clean base version by removing trailing -dev or -prod
+        val cleanVersion = rawVersion.replace(Regex("(?i)-(dev|prod)$"), "").trim()
+
+        val rawCommitHash = dotenv?.get("GIT_COMMIT_HASH")
             ?: System.getenv("GIT_COMMIT_HASH")
             ?: System.getenv("GITHUB_SHA")?.take(7)
 
+        // Only attach commitHash if it's a valid hexadecimal commit SHA
+        val commitHash = rawCommitHash?.trim()?.takeIf {
+            it.lowercase() != "dev" && it.lowercase() != "local" && it.lowercase() != "main" && it.matches(Regex("^[a-fA-F0-9]{4,40}$"))
+        }
+
         val suffix = if (isProd) "prod" else "dev"
         val commitPart = if (!commitHash.isNullOrEmpty()) "-$commitHash" else ""
-        val fullTag = "v$baseVersion-$suffix$commitPart"
+        val fullTag = "v$cleanVersion-$suffix$commitPart"
 
         return AppVersionInfo(
-            version = baseVersion,
+            version = cleanVersion,
             environment = envName,
             fullVersionTag = fullTag,
             commitHash = commitHash,
