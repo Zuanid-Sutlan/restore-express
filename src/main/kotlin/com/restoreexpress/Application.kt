@@ -8,6 +8,8 @@ import com.restoreexpress.services.RepairService
 import com.restoreexpress.services.ShopService
 import com.restoreexpress.services.StripeService
 import com.restoreexpress.services.AdminService
+import com.restoreexpress.services.SettingsService
+import com.restoreexpress.services.VersionService
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -47,6 +49,8 @@ fun Application.module() {
     val repairService = RepairService()
     val stripeService = StripeService()
     val adminService = AdminService()
+    val settingsService = SettingsService()
+    val versionService = VersionService(dotenv)
 
     // Plugins
     install(CallLogging)
@@ -79,12 +83,30 @@ fun Application.module() {
 
     install(StatusPages) {
         status(HttpStatusCode.NotFound) { call, status ->
-            call.respond(FreeMarkerContent("error.ftl", mapOf("status" to status.value, "message" to "Page Not Found")))
+            val settings = runCatching { settingsService.getSettings() }.getOrNull()
+            val versionInfo = runCatching { versionService.getVersionInfo() }.getOrNull()
+            val model = mutableMapOf<String, Any?>(
+                "status" to status.value,
+                "message" to "Page Not Found"
+            )
+            if (settings != null) model["settings"] = settings
+            if (versionInfo != null) model["versionInfo"] = versionInfo
+            call.respond(FreeMarkerContent("error.ftl", model))
         }
         exception<Throwable> { call, cause ->
-            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+            call.application.environment.log.error("Unhandled exception processing ${call.request.local.uri}", cause)
+            cause.printStackTrace()
+            val settings = runCatching { settingsService.getSettings() }.getOrNull()
+            val versionInfo = runCatching { versionService.getVersionInfo() }.getOrNull()
+            val model = mutableMapOf<String, Any?>(
+                "status" to 500,
+                "message" to "Internal Server Error: ${cause.message}"
+            )
+            if (settings != null) model["settings"] = settings
+            if (versionInfo != null) model["versionInfo"] = versionInfo
+            call.respond(HttpStatusCode.InternalServerError, FreeMarkerContent("error.ftl", model))
         }
     }
 
-    configureRouting(shopService, repairService, stripeService, adminService)
+    configureRouting(shopService, repairService, stripeService, adminService, settingsService, versionService)
 }
