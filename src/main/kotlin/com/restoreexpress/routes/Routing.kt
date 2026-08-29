@@ -12,7 +12,9 @@ fun Application.configureRouting(
     shopService: ShopService,
     repairService: RepairService,
     stripeService: StripeService,
-    adminService: AdminService
+    adminService: AdminService,
+    settingsService: SettingsService = SettingsService(),
+    versionService: VersionService = VersionService()
 ) {
     routing {
         staticResources("/static", "static")
@@ -21,13 +23,23 @@ fun Application.configureRouting(
         openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml")
 
         get("/api/health") {
-            call.respondText("OK")
+            val v = versionService.getVersionInfo()
+            call.respond(mapOf(
+                "status" to "OK",
+                "environment" to v.environment,
+                "version" to v.version,
+                "fullVersionTag" to v.fullVersionTag
+            ))
         }
 
-        staticPageRoutes()
+        get("/api/version") {
+            call.respond(versionService.getVersionInfo())
+        }
+
+        staticPageRoutes(settingsService, versionService)
         repairRoutes(repairService)
         shopRoutes(shopService)
         webhookRoutes(stripeService)
-        adminRoutes(adminService)
+        adminRoutes(adminService, shopService, repairService, settingsService, versionService)
     }
 }

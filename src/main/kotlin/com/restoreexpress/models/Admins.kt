@@ -1,8 +1,8 @@
 package com.restoreexpress.models
 
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
+import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 object Admins : IntIdTable("admins") {
@@ -18,4 +18,7 @@ data class Admin(
 )
 
 @Serializable
-data class AdminSession(val adminId: Int, val email: String)
+data class AdminSession(
+    val adminId: Int,
+    val email: String
+)

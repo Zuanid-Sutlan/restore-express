@@ -51,6 +51,13 @@ object OrderItems : IntIdTable("order_items") {
     val unitPricePence = integer("unit_price_pence")
 }
 
+data class ProductImage(
+    val id: Int,
+    val productId: Int,
+    val url: String,
+    val sortOrder: Int = 0
+)
+
 data class Product(
     val id: Int,
     val brand: String,
@@ -58,5 +65,59 @@ data class Product(
     val slug: String,
     val pricePence: Int,
     val stockQuantity: Int,
-    val condition: ProductCondition
+    val condition: ProductCondition,
+    val description: String? = null,
+    val storageVariant: String? = null,
+    val color: String? = null,
+    @get:JvmName("getIsActive") val isActive: Boolean = true,
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val images: List<ProductImage> = emptyList()
+) {
+    val active: Boolean get() = isActive
+}
+
+data class Order(
+    val id: Int,
+    val orderReference: String,
+    val customerName: String,
+    val email: String,
+    val phone: String,
+    val shippingAddressLine1: String,
+    val shippingAddressLine2: String?,
+    val shippingCity: String,
+    val shippingPostcode: String,
+    val shippingCountry: String,
+    val status: OrderStatus,
+    val subtotalPence: Int,
+    val shippingCostPence: Int,
+    val totalPence: Int,
+    val stripePaymentIntentId: String?,
+    val trackingNumber: String?,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime
+)
+
+data class OrderItemDetail(
+    val id: Int,
+    val productId: Int,
+    val productBrand: String,
+    val productModel: String,
+    val quantity: Int,
+    val unitPricePence: Int
+)
+
+data class DetailedOrder(
+    val order: Order,
+    val items: List<OrderItemDetail>
+)
+
+data class DashboardStats(
+    val totalProducts: Int,
+    val activeProducts: Int,
+    val totalOrders: Int,
+    val pendingOrders: Int,
+    val totalRepairs: Int,
+    val activeRepairs: Int,
+    val recentOrders: List<Order>,
+    val recentRepairs: List<Repair>
 )

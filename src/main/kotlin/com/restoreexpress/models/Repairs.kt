@@ -53,3 +53,16 @@ data class Repair(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 )
+
+data class RepairEvent(
+    val id: Int,
+    val repairId: Int,
+    val status: RepairStatus,
+    val note: String?,
+    val createdAt: LocalDateTime
+)
+
+data class DetailedRepair(
+    val repair: Repair,
+    val events: List<RepairEvent>
+)

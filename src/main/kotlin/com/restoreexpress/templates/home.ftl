@@ -1,11 +1,16 @@
 <#import "layout.ftl" as layout>
-<@layout.mainLayout title="Home">
-    <section class="hero">
-        <h1>Fast, Professional Device Repairs</h1>
-        <p>Premium refurbished devices and expert repair services.</p>
-        <div class="actions">
-            <a href="/repair/book" class="btn">Book a Repair</a>
-            <a href="/shop" class="btn btn-alt">Browse Shop</a>
-        </div>
-    </section>
+<#import "components/hero.ftl" as hero>
+<#import "components/how_it_works.ftl" as hiw>
+<#import "components/why_choose_us.ftl" as why>
+<#import "components/popular_repairs.ftl" as repairs>
+<#import "components/reviews.ftl" as reviews>
+<#import "components/cta.ftl" as cta>
+
+<@layout.mainLayout title="Fast & Reliable Mobile Phone Repairs" activePage="home" settings=settings!>
+    <@hero.heroSection />
+    <@hiw.howItWorksSection />
+    <@why.whyChooseUsSection />
+    <@repairs.popularRepairsSection />
+    <@reviews.reviewsSection />
+    <@cta.ctaSection />
 </@layout.mainLayout>
