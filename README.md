@@ -1,31 +1,108 @@
-# express
+# Restore Express Server
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+A clean, layered Ktor server for a repair service and refurbished device shop.
 
-Here are some useful links to get you started:
- * [Ktor Documentation](https://ktor.io/docs/home.html)
- * [Ktor GitHub page](https://github.com/ktorio/ktor)
- * [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). [Request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up).
+## Tech Stack
+- **Ktor** (Core, Sessions, FreeMarker, ContentNegotiation)
+- **Exposed ORM** + **PostgreSQL**
+- **Flyway** (Migrations)
+- **Stripe Java SDK** (Payments)
+- **Kotlinx Serialization** (JSON)
+- **FreeMarker** (HTML Templates)
+- **dotenv-kotlin** (Configuration)
 
+## Project Structure
+- `config/`: Infrastructure setup (DB, Stripe, Auth)
+- `models/`: Database tables (Exposed) and Data Classes
+- `services/`: Business logic (Repair, Shop, Stripe)
+- `routes/`: Ktor route handlers grouped by feature
+- `templates/`: FreeMarker `.ftl` files (as requested in `src/main/kotlin/...`)
+- `resources/db/migration/`: Flyway SQL scripts
 
-## Features
-Here's a list of features included in this project:
+## Setup
 
-| Name | Description |
-|------|-------------|
+1. **Environment Variables**:
+   Copy `.env.example` to `.env` and fill in your Stripe keys and database credentials.
+   ```bash
+   cp .env.example .env
+   ```
 
-## Building & Running
-To build or run the project, use one of the following tasks:
+2. **Database**:
+   Run the local PostgreSQL instance using Docker:
+   ```bash
+   docker-compose up -d
+   ```
 
+3. **Run Migrations**:
+   Flyway migrations run automatically on application startup via `DatabaseFactory`.
 
-| Task | Description |
-|------|-------------|
-| `./gradlew test`    | Run the tests     |
-| `./gradlew build`   | Build the project |
-| `./gradlew run`     | Run the server    |
+4. **Run the Application**:
+   ```bash
+   ./gradlew run
+   ```
+   The server will be available at `http://localhost:8080`.
 
-If the server starts successfully, you'll see the following output:
+## Key Routes
+- `/`: Homepage
+- `/repair/book`: Repair booking form
+- `/shop`: Product catalog
+- `/track`: Tracking page (lookup by reference)
+- `/admin/login`: Admin gateway
+- `/webhooks/stripe`: Stripe payment verification
+
+## Branch Strategy & CI / PR Pipeline
+
+### Branch Flow
+```text
+[ feature/* or fix/* ] --(PR + CI)--> [ develop ] --(PR + CI)--> [ main (Production) ]
 ```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
+1. **Feature / Fix Branches**: Create your working branch from `develop`.
+2. **PR to `develop`**: Open a PR targeting `develop`. GitHub Actions automatically verifies and tests the code.
+3. **PR to `main`**: When `develop` is ready for production release, open a PR from `develop` to `main`. GitHub Actions runs verification again before merge.
+
+### Workflow Jobs (`.github/workflows/ci.yml`):
+1. **Validate Gradle Wrapper**: Verifies wrapper integrity against official checksums.
+2. **Build & Test**: Sets up JDK 21, builds the project with `./gradlew assemble`, executes all tests via `./gradlew check`, and uploads HTML test reports as artifacts.
+
+## Version Management (`version.properties`)
+
+Version management across environments and devices is configured simply via **`version.properties`** in the root directory:
+
+```properties
+app.version=1.0.0-dev
+app.environment=develop
 ```
+
+### GitHub PR Flow for Version Updates:
+1. **Feature / Fix -> `develop` Branch**:
+   When opening a PR from a `feature/*` branch to `develop`, update `version.properties`:
+   ```properties
+   app.version=1.0.0-dev  # (or 1.1.0-dev)
+   app.environment=develop
+   ```
+2. **`develop` -> `main` Branch (Production Release)**:
+   When opening a PR from `develop` to `main`, update `version.properties`:
+   ```properties
+   app.version=1.0.0      # (or 1.1.0)
+   app.environment=production
+   ```
+
+### Cross-Device Endpoints & Headers:
+- **`GET /api/version`**: Returns JSON version details read directly from `version.properties`.
+- **`GET /api/health`**: Returns system health and version metadata.
+- **HTTP Response Headers**: All server responses inject `X-App-Version`, `X-App-Env`, and `X-App-Version-Tag` headers for connected devices/clients.
+
+### Required GitHub Branch Protection Setup:
+To enforce PR verification before merging:
+1. Go to your GitHub repository **Settings** > **Branches**.
+2. Add branch protection rules for both **`develop`** and **`main`**.
+3. Enable **Require a pull request before merging**.
+4. Enable **Require status checks to pass before merging**.
+5. Select **`Build & Test`** and **`Validate Gradle Wrapper`** as required status checks.
+
+## Database Schema
+The schema is defined in `V1__init.sql` and mapped in `models/*.kt`. 
+It includes modules for:
+- **Repairs**: Tracking status, customer details, and payments.
+- **Shop**: Inventory management, orders, and items.
+- **Admins**: Secure access to the dashboard.
