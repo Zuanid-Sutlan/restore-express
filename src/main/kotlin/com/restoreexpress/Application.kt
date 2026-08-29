@@ -55,6 +55,14 @@ fun Application.module() {
     // Plugins
     install(CallLogging)
     
+    // Inject cross-device version metadata headers into all HTTP responses
+    intercept(ApplicationCallPipeline.Plugins) {
+        val v = versionService.getVersionInfo()
+        call.response.headers.append("X-App-Version", v.version)
+        call.response.headers.append("X-App-Env", v.environment)
+        call.response.headers.append("X-App-Version-Tag", v.fullVersionTag)
+    }
+
     install(ContentNegotiation) {
         json()
     }

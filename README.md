@@ -64,6 +64,34 @@ A clean, layered Ktor server for a repair service and refurbished device shop.
 1. **Validate Gradle Wrapper**: Verifies wrapper integrity against official checksums.
 2. **Build & Test**: Sets up JDK 21, builds the project with `./gradlew assemble`, executes all tests via `./gradlew check`, and uploads HTML test reports as artifacts.
 
+## Version Management (`version.properties`)
+
+Version management across environments and devices is configured simply via **`version.properties`** in the root directory:
+
+```properties
+app.version=1.0.0-dev
+app.environment=develop
+```
+
+### GitHub PR Flow for Version Updates:
+1. **Feature / Fix -> `develop` Branch**:
+   When opening a PR from a `feature/*` branch to `develop`, update `version.properties`:
+   ```properties
+   app.version=1.0.0-dev  # (or 1.1.0-dev)
+   app.environment=develop
+   ```
+2. **`develop` -> `main` Branch (Production Release)**:
+   When opening a PR from `develop` to `main`, update `version.properties`:
+   ```properties
+   app.version=1.0.0      # (or 1.1.0)
+   app.environment=production
+   ```
+
+### Cross-Device Endpoints & Headers:
+- **`GET /api/version`**: Returns JSON version details read directly from `version.properties`.
+- **`GET /api/health`**: Returns system health and version metadata.
+- **HTTP Response Headers**: All server responses inject `X-App-Version`, `X-App-Env`, and `X-App-Version-Tag` headers for connected devices/clients.
+
 ### Required GitHub Branch Protection Setup:
 To enforce PR verification before merging:
 1. Go to your GitHub repository **Settings** > **Branches**.

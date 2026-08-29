@@ -1,0 +1,97 @@
+name: GitHub Release & Cross-Device Build
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release Version (e.g. 1.0.0)'
+        required: true
+        default: '1.0.0'
+      environment:
+        description: 'Target Environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - develop
+
+jobs:
+  release:
+    name: Create GitHub Release & Package Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Extract Metadata & Version
+        id: meta
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          REF_NAME="${{ github.ref_name }}"
+          
+          if [[ "${REF_NAME}" =~ ^v[0-9] ]]; then
+            VERSION="${REF_NAME#v}"
+            ENV="production"
+          else
+            VERSION="${{ inputs.version || '1.0.0' }}"
+            ENV="${{ inputs.environment || 'production' }}"
+          fi
+
+          FULL_TAG="v${VERSION}-${ENV:0:4}-${SHORT_SHA}"
+
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "environment=${ENV}" >> $GITHUB_OUTPUT
+          echo "commit_sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "full_tag=${FULL_TAG}" >> $GITHUB_OUTPUT
+
+          echo "Building Version: ${VERSION} (${ENV}) - SHA: ${SHORT_SHA}"
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Runnable Fat JAR
+        env:
+          APP_VERSION: ${{ steps.meta.outputs.version }}
+          APP_ENV: ${{ steps.meta.outputs.environment }}
+          GIT_COMMIT_HASH: ${{ steps.meta.outputs.commit_sha }}
+        run: |
+          chmod +x gradlew
+          ./gradlew shadowJar
+
+      - name: Rename Release Jar Artifact
+        run: |
+          mkdir -p artifacts
+          cp build/libs/*-all.jar artifacts/restore-express-${{ steps.meta.outputs.full_tag }}.jar
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ steps.meta.outputs.full_tag }}
+          body: |
+            ## Restore Express Release `${{ steps.meta.outputs.full_tag }}`
+            
+            - **Version**: `${{ steps.meta.outputs.version }}`
+            - **Environment**: `${{ steps.meta.outputs.environment }}`
+            - **Commit SHA**: `${{ steps.meta.outputs.commit_sha }}`
+            
+            ### Cross-Device Verification Endpoints
+            - `GET /api/version` -> JSON details
+            - `GET /api/health` -> System health status
+            - HTTP Header: `X-App-Version-Tag`
+          files: artifacts/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
