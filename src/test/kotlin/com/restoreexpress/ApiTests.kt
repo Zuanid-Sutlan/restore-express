@@ -272,6 +272,20 @@ class ApiTests {
     }
 
     @Test
+    fun testVersionServiceFormatting() {
+        val versionService = VersionService()
+        val info = versionService.getVersionInfo()
+        
+        if (info.isProduction) {
+            assertEquals("v1.0.0-prod", info.fullVersionTag)
+            assertFalse(info.fullVersionTag.endsWith("-dev"), "Production tag should not end with -dev")
+        } else {
+            assertEquals("v1.0.0-dev", info.fullVersionTag)
+            assertFalse(info.fullVersionTag.contains("dev-dev"), "Dev tag should not have duplicated -dev-dev")
+        }
+    }
+
+    @Test
     fun testRealTemplatesRendering() = testApplication {
         val validHash = "\$2a\$10\$MrwodC4t4RKqQus5ouholO8S9wNkQApe7c0TsUxCngQTzPgEJJggS"
         val testClient = createClient {
