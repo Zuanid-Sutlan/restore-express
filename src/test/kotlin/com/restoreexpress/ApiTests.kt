@@ -185,9 +185,13 @@ class ApiTests {
         val healthRes = client.get("/api/health")
         assertEquals(HttpStatusCode.OK, healthRes.status)
         assertTrue(healthRes.bodyAsText().contains("environment"))
+        assertNotNull(healthRes.headers["X-App-Version"])
+        assertNotNull(healthRes.headers["X-App-Env"])
+        assertNotNull(healthRes.headers["X-App-Version-Tag"])
 
         val versionRes = client.get("/api/version")
         assertEquals(HttpStatusCode.OK, versionRes.status)
+        assertTrue(versionRes.bodyAsText().contains("fullVersionTag"))
         assertTrue(versionRes.bodyAsText().contains("fullVersionTag"))
     }
 
@@ -328,6 +332,13 @@ class ApiTests {
     }
 
     private fun Application.setupTestModule(validHash: String) {
+        val versionService = VersionService()
+        intercept(ApplicationCallPipeline.Plugins) {
+            val v = versionService.getVersionInfo()
+            call.response.headers.append("X-App-Version", v.version)
+            call.response.headers.append("X-App-Env", v.environment)
+            call.response.headers.append("X-App-Version-Tag", v.fullVersionTag)
+        }
         install(ContentNegotiation) { json() }
         install(Sessions) {
             cookie<AdminSession>("ADMIN_SESSION") {

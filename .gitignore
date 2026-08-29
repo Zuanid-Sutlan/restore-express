@@ -5,3 +5,4 @@
 /.kotlin/
 *.iml
 .DS_Store
+.env

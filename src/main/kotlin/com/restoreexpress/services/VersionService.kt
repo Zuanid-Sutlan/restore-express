@@ -2,15 +2,27 @@ package com.restoreexpress.services
 
 import com.restoreexpress.models.AppVersionInfo
 import io.github.cdimascio.dotenv.Dotenv
+import java.io.File
+import java.util.Properties
 
 open class VersionService(private val dotenv: Dotenv? = null) {
 
     open fun getVersionInfo(): AppVersionInfo {
-        val baseVersion = dotenv?.get("APP_VERSION")
+        val properties = Properties()
+        val versionFile = File("version.properties")
+        if (versionFile.exists()) {
+            runCatching {
+                versionFile.inputStream().use { properties.load(it) }
+            }
+        }
+
+        val baseVersion = properties.getProperty("app.version")
+            ?: dotenv?.get("APP_VERSION")
             ?: System.getenv("APP_VERSION")
             ?: "1.0.0"
 
-        val rawEnv = dotenv?.get("APP_ENV")
+        val rawEnv = properties.getProperty("app.environment")
+            ?: dotenv?.get("APP_ENV")
             ?: System.getenv("APP_ENV")
             ?: "develop"
 
@@ -32,7 +44,7 @@ open class VersionService(private val dotenv: Dotenv? = null) {
             fullVersionTag = fullTag,
             commitHash = commitHash,
             isProduction = isProd,
-            isDevelopment = !isProd
+            isDevelopment = !isProd,
         )
     }
 }
