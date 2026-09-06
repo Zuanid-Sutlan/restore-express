@@ -6,7 +6,7 @@
         <!-- Brand Col -->
         <div class="footer-col brand-col">
           <a href="/" class="footer-logo">
-            <i class="fa-solid fa-wrench"></i> Restore<span class="highlight">Express</span>
+            <img src="/static/images/logo-icon.png" alt="RestoreExpress Logo" class="brand-logo-img"> Restore<span class="highlight">Express</span>
           </a>
           <p class="footer-about">
             Your premier nationwide postal and express mobile repair destination. We deliver OEM-grade quality, quick
