@@ -1,0 +1,65 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Fat JAR
+        run: |
+          chmod +x gradlew
+          ./gradlew shadowJar
+
+      - name: Prepare Deployment Files
+        run: |
+          mkdir -p deploy
+          cp build/libs/*-all.jar deploy/app.jar
+          cp Dockerfile deploy/Dockerfile
+          cp docker-compose.yml deploy/docker-compose.yml
+
+      - name: Transfer Files to Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          port: ${{ secrets.DO_SSH_PORT }}
+          source: "deploy/*"
+          strip_components: 1
+          target: "~/restore-express"
+
+      - name: Deploy on Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          port: ${{ secrets.DO_SSH_PORT }}
+          script: |
+            cd ~/restore-express
+            docker compose down --remove-orphans
+            docker compose build --no-cache app
+            docker compose up -d
+            docker image prune -f
