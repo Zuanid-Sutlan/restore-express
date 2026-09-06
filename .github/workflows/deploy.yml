@@ -36,7 +36,6 @@ jobs:
         run: |
           mkdir -p deploy
           cp build/libs/*-all.jar deploy/app.jar
-          cp Dockerfile deploy/Dockerfile
           cp docker-compose.yml deploy/docker-compose.yml
 
       - name: Transfer Files to Server
@@ -60,6 +59,5 @@ jobs:
           script: |
             cd ~/restore-express
             docker compose down --remove-orphans
-            docker compose build --no-cache app
-            docker compose up -d
+            docker compose up -d --force-recreate
             docker image prune -f
