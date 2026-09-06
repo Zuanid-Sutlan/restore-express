@@ -36,6 +36,10 @@ fun Application.configureRouting(
             call.respond(versionService.getVersionInfo())
         }
 
+        get("/favicon.ico") {
+            call.respondRedirect("/static/images/logo-icon.png")
+        }
+
         staticPageRoutes(settingsService, versionService)
         repairRoutes(repairService)
         shopRoutes(shopService)
