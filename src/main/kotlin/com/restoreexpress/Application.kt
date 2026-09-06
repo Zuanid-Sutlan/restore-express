@@ -103,8 +103,15 @@ fun Application.module() {
     }
 
     install(FreeMarker) {
-        // Use the folder requested by the user
-        templateLoader = FileTemplateLoader(File("src/main/kotlin/com/restoreexpress/templates"))
+        val templateDir = File("src/main/kotlin/com/restoreexpress/templates")
+        templateLoader = if (templateDir.exists() && templateDir.isDirectory) {
+            MultiTemplateLoader(arrayOf(
+                FileTemplateLoader(templateDir),
+                ClassTemplateLoader(Application::class.java.classLoader, "com/restoreexpress/templates")
+            ))
+        } else {
+            ClassTemplateLoader(Application::class.java.classLoader, "com/restoreexpress/templates")
+        }
     }
 
     install(StatusPages) {
