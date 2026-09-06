@@ -32,13 +32,31 @@ fun Application.module() {
         ignoreIfMissing = true
     }
 
-    val databaseUrl = dotenv["DATABASE_URL"] ?: "jdbc:postgresql://localhost:5433/restore_express"
-    val dbUser = dotenv["DATABASE_USER"] ?: dotenv["POSTGRES_USER"] ?: "postgres"
-    val dbPassword = dotenv["DATABASE_PASSWORD"] ?: dotenv["POSTGRES_PASSWORD"] ?: "postgres"
+    val databaseUrl = System.getenv("DATABASE_URL")
+        ?: System.getenv("DB_URL")
+        ?: dotenv["DATABASE_URL"]
+        ?: dotenv["DB_URL"]
+        ?: "jdbc:postgresql://localhost:5433/restore_express"
+
+    val dbUser = System.getenv("DATABASE_USER")
+        ?: System.getenv("DB_USER")
+        ?: System.getenv("POSTGRES_USER")
+        ?: dotenv["DATABASE_USER"]
+        ?: dotenv["DB_USER"]
+        ?: dotenv["POSTGRES_USER"]
+        ?: "postgres"
+
+    val dbPassword = System.getenv("DATABASE_PASSWORD")
+        ?: System.getenv("DB_PASSWORD")
+        ?: System.getenv("POSTGRES_PASSWORD")
+        ?: dotenv["DATABASE_PASSWORD"]
+        ?: dotenv["DB_PASSWORD"]
+        ?: dotenv["POSTGRES_PASSWORD"]
+        ?: "postgres"
     
-    val stripeSecretKey = dotenv["STRIPE_SECRET_KEY"] ?: ""
-    val stripeWebhookSecret = dotenv["STRIPE_WEBHOOK_SECRET"] ?: ""
-    val sessionSecret = dotenv["SESSION_SECRET"] ?: "change-me-in-production-123456789012"
+    val stripeSecretKey = System.getenv("STRIPE_SECRET_KEY") ?: dotenv["STRIPE_SECRET_KEY"] ?: ""
+    val stripeWebhookSecret = System.getenv("STRIPE_WEBHOOK_SECRET") ?: dotenv["STRIPE_WEBHOOK_SECRET"] ?: ""
+    val sessionSecret = System.getenv("SESSION_SECRET") ?: dotenv["SESSION_SECRET"] ?: "change-me-in-production-123456789012"
 
     // Infrastructure
     DatabaseFactory.init(databaseUrl, dbUser, dbPassword)

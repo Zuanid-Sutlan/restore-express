@@ -9,9 +9,9 @@ services:
     ports:
       - "80:8080"
     environment:
-      DB_URL: "jdbc:postgresql://db:5432/restore_express"
-      DB_USER: "postgres"
-      DB_PASSWORD: "postgres"
+      DATABASE_URL: "jdbc:postgresql://db:5432/restore_express"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
     depends_on:
       - db
 
