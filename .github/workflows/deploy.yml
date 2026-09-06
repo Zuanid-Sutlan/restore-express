@@ -57,7 +57,33 @@ jobs:
           key: ${{ secrets.DO_SSH_KEY }}
           port: ${{ secrets.DO_SSH_PORT }}
           script: |
+            export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/snap/bin
+            source ~/.profile 2>/dev/null || true
+            source ~/.bashrc 2>/dev/null || true
             cd ~/restore-express
-            docker compose down --remove-orphans
-            docker compose up -d --force-recreate
-            docker image prune -f
+
+            if command -v docker &> /dev/null; then
+              DOCKER_CMD="docker"
+            elif [ -f /usr/bin/docker ]; then
+              DOCKER_CMD="/usr/bin/docker"
+            elif [ -f /usr/local/bin/docker ]; then
+              DOCKER_CMD="/usr/local/bin/docker"
+            elif [ -f /snap/bin/docker ]; then
+              DOCKER_CMD="/snap/bin/docker"
+            else
+              echo "Error: docker binary not found on remote server."
+              exit 1
+            fi
+
+            if $DOCKER_CMD compose version &> /dev/null; then
+              COMPOSE_CMD="$DOCKER_CMD compose"
+            elif command -v docker-compose &> /dev/null; then
+              COMPOSE_CMD="docker-compose"
+            else
+              echo "Error: docker compose plugin or docker-compose binary not found."
+              exit 1
+            fi
+
+            $COMPOSE_CMD down --remove-orphans
+            $COMPOSE_CMD up -d --force-recreate
+            $DOCKER_CMD image prune -f
