@@ -113,4 +113,21 @@ jobs:
             cd ~/restore-express
             $COMPOSE_CMD down --remove-orphans || true
             $COMPOSE_CMD up -d --force-recreate
+
+            echo "Waiting for PostgreSQL database to start..."
+            for i in {1..30}; do
+              if $COMPOSE_CMD exec -T db pg_isready -U postgres &> /dev/null; then
+                break
+              fi
+              sleep 1
+            done
+
+            # Check if database authentication succeeds with password 'postgres'
+            # If authentication fails due to stale volume created with old password, reset volume
+            if ! $COMPOSE_CMD exec -T db psql -U postgres -d restore_express -c "\q" &> /dev/null; then
+              echo "Database authentication failed (stale volume detected). Resetting database volume..."
+              $COMPOSE_CMD down -v --remove-orphans || true
+              $COMPOSE_CMD up -d --force-recreate
+            fi
+
             $DOCKER_CMD image prune -f || true
