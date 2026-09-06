@@ -13,6 +13,10 @@
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
+  <!-- Favicon / Browser Icon -->
+  <link rel="icon" type="image/png" href="/static/images/logo-icon.png" />
+  <link rel="shortcut icon" href="/static/images/logo-icon.png" type="image/png" />
+
   <!-- External Stylesheet -->
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
@@ -22,7 +26,7 @@
     <div class="admin-login-card">
       <div class="login-brand">
         <a href="/" class="logo">
-          <span class="logo-icon"><i class="fa-solid fa-wrench"></i></span>
+          <span class="logo-icon"><img src="/static/images/logo-icon.png" alt="RestoreExpress Logo" class="brand-logo-img"></span>
           <span class="logo-text">Restore<span class="highlight">Express</span></span>
         </a>
         <h2>Admin Portal</h2>

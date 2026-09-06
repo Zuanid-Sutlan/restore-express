@@ -1,32 +1,88 @@
 /* =======================================================
    RESTORE EXPRESS - CORE STYLESHEET
    Theme: Red (#E50914 / #C70000) & White (#FFFFFF)
-   Typography: Poppins
+   Typography: Aspire SmallCaps (Headings) & Nexa (Body)
 ======================================================= */
+
+/* --- FONTS DECLARATIONS --- */
+@font-face {
+    font-family: 'Aspire SmallCaps';
+    src: url('/static/fonts/aspire-smallcaps/AspireSCLight-Regular.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aspire SmallCaps';
+    src: url('/static/fonts/aspire-smallcaps/AspireSC-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aspire SmallCaps';
+    src: url('/static/fonts/aspire-smallcaps/AspireSCOblique-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Aspire SmallCaps';
+    src: url('/static/fonts/aspire-smallcaps/AspireSCBlack-Regular.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aspire SmallCaps';
+    src: url('/static/fonts/aspire-smallcaps/AspireSCBlackOblique-Regular.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* Nexa Body Font */
+@font-face {
+    font-family: 'Nexa';
+    src: url('/static/fonts/nexa/Nexa-ExtraLight.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nexa';
+    src: url('/static/fonts/nexa/Nexa-Heavy.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
 
 /* --- ROOT VARIABLES --- */
 :root {
-    --primary-red: #e50914;
-    --primary-red-hover: #c40812;
+    --font-heading: 'Aspire SmallCaps', 'Poppins', sans-serif;
+    --font-body: 'Nexa', 'Poppins', sans-serif;
+
+    /* Exact Brand Palette */
+    --primary-red: #D51722;
+    --primary-red-hover: #b8101a;
     --primary-red-dark: #8b0000;
-    --primary-red-soft: #fff1f2;
-    --accent-red: #ff333a;
+    --primary-red-soft: #fdf2f3;
+    --accent-red: #D51722;
 
     --bg-white: #ffffff;
     --bg-light: #f8fafc;
-    --bg-subtle: #f1f5f9;
+    --bg-subtle: #D1CDD1;
 
-    --text-dark: #0f172a;
-    --text-muted: #64748b;
-    --text-light: #94a3b8;
+    --text-dark: #3F404C;
+    --text-muted: #5e606e;
+    --text-light: #818494;
 
-    --border-color: #e2e8f0;
-    --border-card: #eaedf2;
+    --border-color: #D1CDD1;
+    --border-card: #e2e0e2;
 
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-    --shadow-lg: 0 20px 30px -10px rgba(229, 9, 20, 0.12);
-    --shadow-hover: 0 22px 35px -8px rgba(229, 9, 20, 0.18);
+    /* Light, Subtle Dark Shadows (No Red Glows) */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.08);
 
     --radius-sm: 8px;
     --radius-md: 14px;
@@ -51,11 +107,16 @@ html {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-body);
     color: var(--text-dark);
     background-color: var(--bg-white);
     line-height: 1.65;
     overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6,
+.logo, .hero-title, .section-title, .cta-title {
+    font-family: var(--font-heading);
 }
 
 img {
@@ -144,13 +205,13 @@ ul {
 .btn-primary {
     background-color: var(--primary-red);
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(229, 9, 20, 0.35);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .btn-primary:hover {
     background-color: var(--primary-red-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(229, 9, 20, 0.45);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
     color: #fff;
 }
 
@@ -346,6 +407,23 @@ ul {
     justify-content: center;
     border-radius: var(--radius-sm);
     font-size: 1rem;
+    overflow: hidden;
+}
+
+.brand-logo-img,
+.logo-icon img {
+    max-width: 26px;
+    max-height: 26px;
+    object-fit: contain;
+    display: block;
+}
+
+.footer-logo .brand-logo-img {
+    height: 28px;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.4rem;
 }
 
 .nav-links {
@@ -408,8 +486,8 @@ ul {
 .hero {
     position: relative;
     padding: 4.5rem 0 5.5rem;
-    background: radial-gradient(circle at 80% 20%, rgba(229, 9, 20, 0.05) 0%, transparent 60%),
-        radial-gradient(circle at 10% 80%, rgba(229, 9, 20, 0.03) 0%, transparent 60%);
+    background: radial-gradient(circle at 80% 20%, rgba(213, 23, 34, 0.04) 0%, transparent 60%),
+        radial-gradient(circle at 10% 80%, rgba(213, 23, 34, 0.02) 0%, transparent 60%);
     overflow: hidden;
 }
 
@@ -428,7 +506,7 @@ ul {
     font-weight: 600;
     color: var(--primary-red);
     background: var(--primary-red-soft);
-    border: 1px solid rgba(229, 9, 20, 0.15);
+    border: 1px solid rgba(213, 23, 34, 0.15);
     padding: 0.4rem 1rem;
     border-radius: var(--radius-full);
     margin-bottom: 1.2rem;
@@ -510,7 +588,7 @@ ul {
     transform: translate(-50%, -50%);
     width: 320px;
     height: 320px;
-    background: radial-gradient(circle, rgba(229, 9, 20, 0.25) 0%, rgba(229, 9, 20, 0) 70%);
+    background: radial-gradient(circle, rgba(213, 23, 34, 0.15) 0%, rgba(213, 23, 34, 0) 70%);
     z-index: 0;
     pointer-events: none;
 }
@@ -602,7 +680,7 @@ ul {
 .process-card:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-hover);
-    border-color: rgba(229, 9, 20, 0.3);
+    border-color: rgba(213, 23, 34, 0.3);
 }
 
 .step-badge {
@@ -691,7 +769,7 @@ ul {
 .feature-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-hover);
-    border-color: rgba(229, 9, 20, 0.25);
+    border-color: rgba(213, 23, 34, 0.25);
 }
 
 .feature-icon {
@@ -855,7 +933,7 @@ ul {
 }
 
 .featured-review {
-    border: 2px solid rgba(229, 9, 20, 0.3);
+    border: 2px solid rgba(213, 23, 34, 0.3);
     background: linear-gradient(180deg, #ffffff 0%, var(--primary-red-soft) 100%);
 }
 
@@ -908,12 +986,12 @@ ul {
 
 .cta-box {
     position: relative;
-    background: linear-gradient(135deg, var(--primary-red) 0%, #a40000 100%);
+    background: linear-gradient(135deg, var(--primary-red) 0%, #8b0000 100%);
     border-radius: var(--radius-lg);
     padding: 4.5rem 2rem;
     text-align: center;
     color: #ffffff;
-    box-shadow: 0 25px 50px -12px rgba(229, 9, 20, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 }
 
@@ -1157,7 +1235,7 @@ ul {
 
 /* Standalone Admin Login Page */
 .admin-login-body {
-    background: radial-gradient(circle at 50% 10%, rgba(229, 9, 20, 0.06) 0%, transparent 60%), var(--bg-light);
+    background: radial-gradient(circle at 50% 10%, rgba(213, 23, 34, 0.06) 0%, transparent 60%), var(--bg-light);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -1360,7 +1438,7 @@ ul {
 .stat-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
-    border-color: rgba(229, 9, 20, 0.2);
+    border-color: rgba(213, 23, 34, 0.2);
 }
 
 .stat-icon {
@@ -1652,7 +1730,7 @@ ul {
     position: absolute;
     top: 6px;
     right: 6px;
-    background: rgba(229, 9, 20, 0.9);
+    background: rgba(213, 23, 34, 0.9);
     color: #ffffff;
     border: none;
     width: 26px;
