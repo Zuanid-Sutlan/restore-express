@@ -9,6 +9,12 @@ kotlin {
     jvmToolchain(21)
 }
 
+sourceSets {
+    main {
+        resources.srcDir("src/main/kotlin")
+    }
+}
+
 group = "com.restoreexpress"
 version = "0.0.1"
 
