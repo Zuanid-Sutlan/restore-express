@@ -20,7 +20,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres_password_here
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: restore_express
     volumes:
       - postgres_data:/var/lib/postgresql/data
