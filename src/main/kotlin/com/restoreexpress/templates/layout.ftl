@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- Favicon / Browser Icon -->
-  <link rel="icon" type="image/png" href="/static/images/logo-icon.png" />
+  <link rel="icon" type="image/png" href="/static/images/ic_icon_favicon.png" />
   <link rel="shortcut icon" href="/static/images/logo-icon.png" type="image/png" />
 
   <!-- External Stylesheet -->
