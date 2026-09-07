@@ -2,7 +2,7 @@
   <header class="header" id="header">
     <div class="container nav-container">
       <a href="/" class="logo">
-        <span class="logo-icon"><img src="/static/images/logo-icon.png" alt="RestoreExpress Logo" class="brand-logo-img"></span>
+        <span class="logo-icon"><img src="/static/images/ic_icon_favicon.png" alt="RestoreExpress Logo" class="brand-logo-img"></span>
         <span class="logo-text">Restore<span class="highlight">Express</span></span>
       </a>
 

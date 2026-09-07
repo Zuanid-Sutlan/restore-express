@@ -37,7 +37,7 @@ fun Application.configureRouting(
         }
 
         get("/favicon.ico") {
-            call.respondRedirect("/static/images/logo-icon.png")
+            call.respondRedirect("/static/images/ic_icon_favicon.png")
         }
 
         staticPageRoutes(settingsService, versionService)
