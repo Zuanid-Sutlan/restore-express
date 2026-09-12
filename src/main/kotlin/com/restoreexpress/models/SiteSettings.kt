@@ -15,5 +15,6 @@ data class SiteSettingsData(
     val youtubeUrl: String = "https://youtube.com/restoreexpress",
     val twitterUrl: String = "https://x.com/restoreexpress",
     val phoneNumber: String = "+1 (800) 555-RESTORE",
-    val supportEmail: String = "support@restoreexpress.com"
+    val supportEmail: String = "support@restoreexpress.com",
+    val deliveryAddress: String = "Restore Express Central Repair Lab\nAttn: Inbound Service Dept (Job Ref: {REF})\n120 Tech Boulevard, Suite 400\nCentral City, UK, CC 90210"
 )
