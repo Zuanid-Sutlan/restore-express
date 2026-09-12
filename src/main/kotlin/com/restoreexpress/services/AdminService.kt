@@ -34,7 +34,7 @@ open class AdminService {
         val activeProducts = allProducts.count { it.isActive }
         val pendingOrders = allOrders.count { it.status == OrderStatus.PENDING }
         val activeRepairs = allRepairs.count {
-            it.status == RepairStatus.RECEIVED || it.status == RepairStatus.IN_PROGRESS || it.status == RepairStatus.AWAITING_PARTS
+            it.status == RepairStatus.RECEIVED || it.status == RepairStatus.REPAIRING || it.status == RepairStatus.WAITING_FOR_APPROVAL
         }
 
         return DashboardStats(

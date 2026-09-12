@@ -67,6 +67,7 @@ fun Route.adminRoutes(
                 val twUrl = params["twitterUrl"]?.trim() ?: ""
                 val phone = params["phoneNumber"]?.trim() ?: ""
                 val email = params["supportEmail"]?.trim() ?: ""
+                val deliveryAddress = params["deliveryAddress"]?.trim() ?: ""
 
                 val updatedData = SiteSettingsData(
                     whatsappNumber = waNumber,
@@ -75,7 +76,8 @@ fun Route.adminRoutes(
                     youtubeUrl = ytUrl,
                     twitterUrl = twUrl,
                     phoneNumber = phone,
-                    supportEmail = email
+                    supportEmail = email,
+                    deliveryAddress = deliveryAddress
                 )
 
                 settingsService.updateSettings(updatedData)

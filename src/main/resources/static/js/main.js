@@ -1,102 +1,115 @@
 /**
- * RESTORE EXPRESS - Modern JavaScript Features
- * - Mobile Navigation Drawer
- * - Sticky Header Shadow on Scroll
- * - Smooth Scrolling for Anchors
- * - Card Hover Micro-Interactions
+ * RESTORE EXPRESS - E-COMMERCE & REPAIR STOREFRONT ENGINE
+ * - Mobile Navigation Toggle
+ * - Category & Condition Facet Filter
+ * - Store Product Search & Sort Controller
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    const header = document.getElementById('header');
+
+    /* --- 1. MOBILE MENU TOGGLE --- */
     const menuToggle = document.getElementById('menu-toggle');
     const navLinks = document.querySelector('.nav-links');
-    const navItems = document.querySelectorAll('.nav-link');
 
-    /* --- 1. STICKY NAVBAR SHADOW ON SCROLL --- */
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 20) {
-            header?.classList.add('scrolled');
-        } else {
-            header?.classList.remove('scrolled');
-        }
-    });
-
-    /* --- 2. MOBILE MENU TOGGLE --- */
     if (menuToggle && navLinks) {
         menuToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
-            const icon = menuToggle.querySelector('i');
-            if (icon) {
-                if (navLinks.classList.contains('active')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-xmark');
-                } else {
-                    icon.classList.remove('fa-xmark');
-                    icon.classList.add('fa-bars');
-                }
-            }
-        });
-
-        // Close menu when clicking outside or clicking any nav link
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                if (navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
-                    const icon = menuToggle.querySelector('i');
-                    if (icon) {
-                        icon.classList.remove('fa-xmark');
-                        icon.classList.add('fa-bars');
-                    }
-                }
-            });
         });
     }
 
-    /* --- 3. ACTIVE LINK INDICATOR ON SCROLL --- */
-    const sections = document.querySelectorAll('section[id]');
-    window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset;
+    /* --- 2. FACET FILTERING & SEARCH CONTROLLER --- */
+    const auctionGrid = document.getElementById('auction-grid');
+    const facetCheckboxes = document.querySelectorAll('.facet-checkbox');
+    const typePills = document.querySelectorAll('.type-pill');
+    const inlineSearch = document.getElementById('inline-search');
+    const sortSelect = document.getElementById('sort-select');
+    const resetBtn = document.getElementById('reset-filters-btn') || document.getElementById('empty-reset-btn');
 
-        sections.forEach(current => {
-            const sectionHeight = current.offsetHeight;
-            const sectionTop = current.offsetTop - 100;
-            const sectionId = current.getAttribute('id');
-            const targetNavLink = document.querySelector(`.nav-links a[href*="${sectionId}"]`);
-
-            if (targetNavLink) {
-                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                    targetNavLink.classList.add('active');
-                } else {
-                    targetNavLink.classList.remove('active');
-                }
-            }
+    typePills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            typePills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            applyFilters();
         });
     });
 
-    /* --- 4. SUBTLE ENTRY ANIMATION (INTERSECTION OBSERVER) --- */
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+    facetCheckboxes.forEach(cb => cb.addEventListener('change', applyFilters));
 
-    const fadeObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                observer.unobserve(entry.target);
+    if (inlineSearch) {
+        inlineSearch.addEventListener('input', applyFilters);
+    }
+
+    if (sortSelect) {
+        sortSelect.addEventListener('change', applyFilters);
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            facetCheckboxes.forEach(cb => cb.checked = true);
+            if (inlineSearch) inlineSearch.value = '';
+            typePills.forEach(p => p.classList.remove('active'));
+            if (typePills[0]) typePills[0].classList.add('active');
+            applyFilters();
+        });
+    }
+
+    function applyFilters() {
+        if (!auctionGrid) return;
+        const cards = Array.from(auctionGrid.querySelectorAll('.auction-card'));
+
+        const checkedConditions = Array.from(document.querySelectorAll('input[name="condition"]:checked')).map(cb => cb.value);
+        const searchText = inlineSearch ? inlineSearch.value.trim().toLowerCase() : '';
+
+        const activePill = document.querySelector('.type-pill.active');
+        const pillType = activePill ? activePill.getAttribute('data-type') : 'ALL';
+
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const title = (card.getAttribute('data-title') || card.querySelector('.lot-title')?.textContent || '').toLowerCase();
+            const brand = (card.getAttribute('data-brand') || '').toLowerCase();
+            const cond = card.getAttribute('data-condition') || '';
+
+            let matchesType = true;
+            if (pillType === 'NEW') matchesType = (cond === 'NEW');
+            if (pillType === 'REFURBISHED') matchesType = (cond.startsWith('REFURBISHED'));
+
+            const matchesCondition = checkedConditions.length === 0 || checkedConditions.includes(cond);
+            const matchesSearch = !searchText || title.includes(searchText) || brand.includes(searchText);
+
+            if (matchesType && matchesCondition && matchesSearch) {
+                card.style.display = 'flex';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
             }
         });
-    }, observerOptions);
 
-    const animatedCards = document.querySelectorAll(
-        '.process-card, .feature-card, .repair-card, .review-card'
-    );
+        if (sortSelect) {
+            sortCards(cards, sortSelect.value);
+        }
 
-    animatedCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(25px)';
-        card.style.transition = `all 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${(index % 3) * 0.1}s`;
-        fadeObserver.observe(card);
-    });
+        const countDisplay = document.getElementById('results-count-number');
+        if (countDisplay) {
+            countDisplay.textContent = visibleCount;
+        }
+    }
+
+    function sortCards(cards, sortVal) {
+        cards.sort((a, b) => {
+            const priceA = parseInt(a.getAttribute('data-price') || '0', 10);
+            const priceB = parseInt(b.getAttribute('data-price') || '0', 10);
+
+            if (sortVal === 'price-low') return priceA - priceB;
+            if (sortVal === 'price-high') return priceB - priceA;
+            if (sortVal === 'title-az') {
+                const titleA = (a.querySelector('.lot-title')?.textContent || '').trim();
+                const titleB = (b.querySelector('.lot-title')?.textContent || '').trim();
+                return titleA.localeCompare(titleB);
+            }
+            return 0;
+        });
+
+        cards.forEach(card => auctionGrid.appendChild(card));
+    }
 });

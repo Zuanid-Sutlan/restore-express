@@ -40,7 +40,7 @@ fun Application.configureRouting(
             call.respondRedirect("/static/images/ic_icon_favicon.png")
         }
 
-        staticPageRoutes(settingsService, versionService)
+        staticPageRoutes(settingsService, versionService, shopService, repairService)
         repairRoutes(repairService)
         shopRoutes(shopService)
         webhookRoutes(stripeService)
