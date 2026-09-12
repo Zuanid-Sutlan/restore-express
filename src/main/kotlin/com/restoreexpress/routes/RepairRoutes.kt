@@ -14,15 +14,19 @@ fun Route.repairRoutes(repairService: RepairService) {
         }
         post("/book") {
             val params = call.receiveParameters()
+            val fault = params["reported_fault"] ?: "Screen & Hardware Repair"
+            val priceVal = params["quoted_price"]?.toDoubleOrNull() ?: 59.00
+            val pricePence = (priceVal * 100).toInt()
+
             val reference = repairService.createRepair(
                 customerName = params["customer_name"] ?: "",
                 email = params["email"] ?: "",
                 phone = params["phone"] ?: "",
                 deviceModel = params["device_model"] ?: "",
-                reportedFault = params["reported_fault"] ?: "",
-                pricePence = 0 // TBD
+                reportedFault = fault,
+                pricePence = pricePence
             )
-            call.respondRedirect("/track?ref=$reference")
+            call.respondRedirect("/track?ref=$reference&booked=1")
         }
     }
 }

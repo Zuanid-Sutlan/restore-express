@@ -1,10 +1,10 @@
-<#import "../admin_layout.ftl" as layout>
+<#import "admin_layout.ftl" as layout>
 
 <@layout.adminLayout title="Site Settings" activeTab="settings">
     <div class="admin-page-header">
         <div>
-            <h1>Contact & Social Media Settings</h1>
-            <p>Manage floating WhatsApp number, social platform links, support phone, and email across your site.</p>
+            <h1>Site Settings & Delivery Address</h1>
+            <p>Manage floating WhatsApp number, Device Send-In Delivery Address, contact details, and social platform links.</p>
         </div>
     </div>
 
@@ -16,7 +16,20 @@
 
     <div class="admin-form-container">
         <form action="/admin/settings" method="POST" class="admin-form">
+            <!-- Delivery Address Section -->
             <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--primary-red); display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-truck-ramp-box"></i> Device Send-In Delivery Address (Managed from Admin)
+            </h2>
+
+            <div class="form-group">
+                <label for="deliveryAddress"><i class="fa-solid fa-location-dot"></i> Official Device Send-In / Delivery Address *</label>
+                <textarea id="deliveryAddress" name="deliveryAddress" rows="4" placeholder="Restore Express Central Repair Lab&#10;Attn: Inbound Repair Dept&#10;120 Tech Boulevard, Suite 400&#10;Central City, UK" required>${settings.deliveryAddress!''}</textarea>
+                <small class="form-hint">This exact address is displayed to customers after they book a repair, telling them where to ship/post their mobile device.</small>
+            </div>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+
+            <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fa-brands fa-whatsapp"></i> WhatsApp Widget Settings
             </h2>
 
