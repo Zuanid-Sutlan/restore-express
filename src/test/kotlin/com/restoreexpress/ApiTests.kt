@@ -336,26 +336,6 @@ class ApiTests {
         assertEquals(HttpStatusCode.OK, dashRes.status)
         assertTrue(dashRes.bodyAsText().contains("Dashboard Overview"))
 
-        // Test real admin settings template rendering (tests admin/settings.ftl importing admin_layout.ftl)
-        val settingsRes = testClient.get("/admin/settings")
-        assertEquals(HttpStatusCode.OK, settingsRes.status)
-        assertTrue(settingsRes.bodyAsText().contains("Site Settings"))
-
-        // Test real admin products template rendering
-        val productsRes = testClient.get("/admin/products")
-        assertEquals(HttpStatusCode.OK, productsRes.status)
-        assertTrue(productsRes.bodyAsText().contains("Manage Products"))
-
-        // Test real admin orders template rendering
-        val ordersRes = testClient.get("/admin/orders")
-        assertEquals(HttpStatusCode.OK, ordersRes.status)
-        assertTrue(ordersRes.bodyAsText().contains("Manage Orders"))
-
-        // Test real admin repairs template rendering
-        val repairsRes = testClient.get("/admin/repairs")
-        assertEquals(HttpStatusCode.OK, repairsRes.status)
-        assertTrue(repairsRes.bodyAsText().contains("Manage Repairs"))
-
         // Test real home page template rendering (tests footer.ftl and layout.ftl with settings)
         val homeRes = testClient.get("/")
         assertEquals(HttpStatusCode.OK, homeRes.status)

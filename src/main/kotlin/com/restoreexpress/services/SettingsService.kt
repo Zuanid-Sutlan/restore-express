@@ -19,8 +19,7 @@ open class SettingsService {
             youtubeUrl = map["youtube_url"] ?: "https://youtube.com/restoreexpress",
             twitterUrl = map["twitter_url"] ?: "https://x.com/restoreexpress",
             phoneNumber = map["phone_number"] ?: "+1 (800) 555-RESTORE",
-            supportEmail = map["support_email"] ?: "support@restoreexpress.com",
-            deliveryAddress = map["delivery_address"] ?: "Restore Express Central Repair Lab\nAttn: Inbound Service Dept (Job Ref: {REF})\n120 Tech Boulevard, Suite 400\nCentral City, UK, CC 90210"
+            supportEmail = map["support_email"] ?: "support@restoreexpress.com"
         )
     }
 
@@ -32,8 +31,7 @@ open class SettingsService {
             "youtube_url" to data.youtubeUrl,
             "twitter_url" to data.twitterUrl,
             "phone_number" to data.phoneNumber,
-            "support_email" to data.supportEmail,
-            "delivery_address" to data.deliveryAddress
+            "support_email" to data.supportEmail
         )
 
         for ((key, value) in updates) {

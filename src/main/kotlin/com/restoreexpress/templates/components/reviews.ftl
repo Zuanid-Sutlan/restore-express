@@ -2,9 +2,9 @@
   <section class="section reviews" id="reviews">
     <div class="container">
       <div class="section-header">
-        <span class="section-subtitle">Verified Buyer Feedback</span>
-        <h2 class="section-title">What Commercial Bidders Say</h2>
-        <p class="section-desc">Over 4.9/5 stars based on verified commercial lot transactions.</p>
+        <span class="section-subtitle">Real Feedback</span>
+        <h2 class="section-title">What Our Customers Say</h2>
+        <p class="section-desc">Over 4.9/5 stars based on verified consumer ratings.</p>
       </div>
 
       <div class="reviews-grid">
@@ -18,13 +18,15 @@
             <i class="fa-solid fa-star"></i>
           </div>
           <p class="review-text">
-            "Won Lot #8492 (iPhone 15 Pro Max) at £420. The diagnostic report was spot-on and item arrived at our Manchester shop in under 24 hours. Phenomenal scan speed and inventory quality!"
+            "Sent my iPhone 14 with a shattered screen on Tuesday morning and had it back on Thursday working like
+            pristine new. Tracking updates kept me stress-free throughout!"
           </p>
           <div class="reviewer">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Emily Davis" />
+            <img src="/static/images/avatar-emily.jpg" alt="Emily Davis"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';" />
             <div>
               <h4>Emily Davis</h4>
-              <span>Tech Reseller, Manchester</span>
+              <span>iPhone 14 Pro Screen Fix</span>
             </div>
           </div>
         </div>
@@ -39,13 +41,15 @@
             <i class="fa-solid fa-star"></i>
           </div>
           <p class="review-text">
-            "The live auction feed is blazing fast. The clear bid/time pairing on every lot card allows us to scan 50 lots in a minute without missing closing countdowns. Highly recommended marketplace."
+            "Honest pricing and superb workmanship. Other repair shops told me motherboard replacement was needed, but
+            Restore Express fixed the charging IC within 24 hours."
           </p>
           <div class="reviewer">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Marcus Vance" />
+            <img src="/static/images/avatar-marcus.jpg" alt="Marcus Vance"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80';" />
             <div>
               <h4>Marcus Vance</h4>
-              <span>Enterprise Purchasing Lead, Birmingham</span>
+              <span>Samsung S23 Ultra Charging Port</span>
             </div>
           </div>
         </div>
@@ -60,13 +64,15 @@
             <i class="fa-solid fa-star"></i>
           </div>
           <p class="review-text">
-            "Outstanding liquidation platform. Clear buyer terms, verified provenance, and excellent freight handling out of the Midlands hub."
+            "Superb battery upgrade service for my Pixel. The turnaround was ridiculously fast and the 12-month warranty
+            provides genuine peace of mind. Highly recommend!"
           </p>
           <div class="reviewer">
-            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80" alt="Sarah Jenkins" />
+            <img src="/static/images/avatar-sarah.jpg" alt="Sarah Jenkins"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80';" />
             <div>
               <h4>Sarah Jenkins</h4>
-              <span>IT Asset Buyer, London</span>
+              <span>Google Pixel 7 Battery</span>
             </div>
           </div>
         </div>

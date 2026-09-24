@@ -2,9 +2,9 @@
   <section class="section how-it-works" id="how-it-works">
     <div class="container">
       <div class="section-header">
-        <span class="section-subtitle">Commercial Bidding Workflow</span>
-        <h2 class="section-title">How Bidding Works</h2>
-        <p class="section-desc">Get started with our transparent 4-step commercial auction and liquidation bidding process.</p>
+        <span class="section-subtitle">Simple 4-Step Process</span>
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-desc">Get your damaged device fixed with our streamlined postal and drop-in repair system.</p>
       </div>
 
       <div class="process-grid">
@@ -12,40 +12,43 @@
         <div class="process-card">
           <div class="step-badge">1</div>
           <div class="process-icon">
-            <i class="fa-solid fa-user-plus"></i>
+            <i class="fa-solid fa-mobile-screen-button"></i>
           </div>
-          <h3>Register & Verify</h3>
-          <p>Create your free buyer account and complete quick ID verification to unlock real-time bidding.</p>
+          <h3>Select Your Device</h3>
+          <p>Choose your brand, model, and the specific fault you need repaired from our catalog.</p>
+          <div class="step-connector"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
 
         <!-- Step 2 -->
         <div class="process-card">
           <div class="step-badge">2</div>
           <div class="process-icon">
-            <i class="fa-solid fa-gavel"></i>
+            <i class="fa-solid fa-calendar-check"></i>
           </div>
-          <h3>Scan & Place Bids</h3>
-          <p>Browse live lots with full diagnostic reports. Set auto-bids or place manual live bids instantly.</p>
+          <h3>Book Your Repair</h3>
+          <p>Get upfront transparent pricing, pick convenient options, and confirm booking in seconds.</p>
+          <div class="step-connector"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
 
         <!-- Step 3 -->
         <div class="process-card">
           <div class="step-badge">3</div>
           <div class="process-icon">
-            <i class="fa-solid fa-credit-card"></i>
+            <i class="fa-solid fa-box-archive"></i>
           </div>
-          <h3>Win & Invoice</h3>
-          <p>Winning bidders receive immediate settlement invoices with 256-bit encrypted checkout.</p>
+          <h3>Send Your Phone</h3>
+          <p>Package safely using our printable prepaid label or drop it off at our authorized post point.</p>
+          <div class="step-connector"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
 
         <!-- Step 4 -->
         <div class="process-card">
           <div class="step-badge">4</div>
           <div class="process-icon">
-            <i class="fa-solid fa-truck-fast"></i>
+            <i class="fa-solid fa-hand-holding-dollar"></i>
           </div>
-          <h3>Insured Dispatch</h3>
-          <p>Items packaged safely with anti-static protection and dispatched directly from regional hubs.</p>
+          <h3>Receive Repaired Device</h3>
+          <p>We fix, thoroughly test, and dispatch your device right back with insured delivery.</p>
         </div>
       </div>
     </div>
